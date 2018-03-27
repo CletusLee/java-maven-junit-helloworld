@@ -10,8 +10,14 @@ pipeline {
             agent {docker 'maven:3.5.3-jdk-8'}
             steps {
                 sh 'mvn clean package'
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'target/site/jacoco/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: ''])
-                junit 'target/surefire-reports/TEST-*.xml'
+                stash name: 'mvnResult', includes:'*'
+            }
+        }
+        stage('Publish Reports') {
+            unstash 'mvnResult'
+            steps {
+               publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'target/site/jacoco/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: ''])
+               junit 'target/surefire-reports/TEST-*.xml'
             }
         }
     }
