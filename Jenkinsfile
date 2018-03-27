@@ -10,7 +10,7 @@ pipeline {
             agent {docker 'maven:3.5.3-jdk-8'}
             steps {
                 sh 'mvn clean package'
-                stash name: 'mvnResult', includes:'*'
+                stash name: 'mvnResult', includes:'target/surefire-reports/TEST-*.xml'
             }
         }
         stage('Publish Reports') {
