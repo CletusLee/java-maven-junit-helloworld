@@ -6,16 +6,10 @@ pipeline {
                 git 'https://github.com/CletusLee/java-maven-junit-helloworld'
             }
         }
-        stage('Clean Workspace') {
-            agent {docker 'maven:3.5.3-jdk-8'}
-            steps {
-                sh 'mvn clean'
-            }
-        }
         stage('Build') {
             agent {docker 'maven:3.5.3-jdk-8'}
             steps {
-                sh 'mvn package'
+                sh 'mvn clean package'
             }
         }
         stage('Publish Reports') {
