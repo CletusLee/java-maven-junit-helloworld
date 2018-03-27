@@ -7,16 +7,18 @@ pipeline {
             }
         }
         stage('Build') {
-            agent {docker 'maven:3.5.3-jdk-8'}
+            agent {
+                docker {
+                    image 'maven:3.5.3-jdk-8'
+                    reuseNode true
+                }
+            }
             steps {
-                sh 'mvn clean verify'
-                stash name: 'mvnResult', includes:'target/**'
+                sh 'mvn clean site'
             }
         }
         stage('Publish Reports') {
-
             steps {
-               unstash 'mvnResult'
                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'target/site/jacoco/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: ''])
                junit 'target/surefire-reports/TEST-*.xml'
             }
