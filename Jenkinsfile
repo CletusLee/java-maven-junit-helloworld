@@ -14,8 +14,9 @@ pipeline {
             }
         }
         stage('Publish Reports') {
-            unstash 'mvnResult'
+
             steps {
+               unstash 'mvnResult'
                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'target/site/jacoco/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: ''])
                junit 'target/surefire-reports/TEST-*.xml'
             }
